@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
 			.phone(userCreationRequest.getPhone())
 			.email(userCreationRequest.getEmail())
 			.accountNumber(UserUtils.generateAccountNumber())
+			.password(UserUtils.generatePassword())
 			.accountBalance(BigDecimal.ZERO)
 			.isActive(true)
 			.build();

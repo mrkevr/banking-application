@@ -1,5 +1,6 @@
 package dev.mrkevr.bankingapplication.util;
 
+import java.security.SecureRandom;
 import java.time.Year;
 import java.util.Random;
 
@@ -32,5 +33,18 @@ public final class UserUtils {
 		int randomNumber = random.nextInt(max - min + 1) + min;
 		String prefix = String.valueOf(Year.now());
 		return prefix + String.valueOf(randomNumber);
+	}
+	
+	public static String generatePassword() {
+		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		SecureRandom secureRandom = new SecureRandom();
+		StringBuilder sb = new StringBuilder(12);
+
+		for (int i = 0; i < 12; i++) {
+			int randomIndex = secureRandom.nextInt(characters.length());
+			char randomChar = characters.charAt(randomIndex);
+			sb.append(randomChar);
+		}
+		return sb.toString();
 	}
 }

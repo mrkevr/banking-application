@@ -64,6 +64,9 @@ public class User {
 	
 	@Column(name = "account_number", unique = true)
 	String accountNumber;
+	
+	@Column(name = "password")
+	String password;
 
 	@Column(name = "email")
 	String email;
