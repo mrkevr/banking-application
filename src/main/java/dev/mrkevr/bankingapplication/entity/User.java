@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import dev.mrkevr.bankingapplication.entity.embeddable.Address;
@@ -14,7 +16,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -36,7 +37,15 @@ import lombok.experimental.FieldDefaults;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GenericGenerator(
+	    name = "users-sequence-generator",
+	    strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+	    parameters = {
+            @Parameter(name = "sequence_name", value = "users_sequence"),
+            @Parameter(name = "initial_value", value = "100000"),
+            @Parameter(name = "increment_size", value = "10")
+	    })
+	@GeneratedValue(generator = "users-sequence-generator")
 	Long id;
 
 	@Embedded

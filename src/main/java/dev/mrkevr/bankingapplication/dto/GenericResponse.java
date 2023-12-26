@@ -13,7 +13,9 @@ import lombok.experimental.FieldDefaults;
 public class GenericResponse {
 
 	String status;
-
+	
+	String apiCode;
+	
 	String message;
 
 	Object body;

@@ -3,11 +3,27 @@ package dev.mrkevr.bankingapplication.util;
 import java.time.Year;
 import java.util.Random;
 
-public class UserUtils {
+public final class UserUtils {
 
-	public static final String USER_CREATION_SUCCESS_CODE = "101";
-	public static final String USER_CREATION_SUCCESS_MESSAGE = "User created cuccessfully";
-	
+	/*
+	 * Codes for response
+	 */
+	public static final String USER_CREATION_SUCCESS_CODE = "100";
+	public static final String USER_CREATION_FAILED_CODE = "101";
+	public static final String EMAIL_ALREADY_EXISTS_CODE = "102";
+	public static final String USER_FIND_SUCCESS_CODE = "103";
+	public static final String USER_FIND_FAILED_CODE = "104";
+
+	/*
+	 * Messages for response
+	 */
+	public static final String USER_CREATION_SUCCESS_MESSAGE = "User created successfully";
+	public static final String USER_CREATION_FAILED_MESSAGE = "User creation failed";
+	public static final String EMAIL_ALREADY_EXISTS_MESSAGE = "Email is already taken by another user";
+
+	private UserUtils() {
+	}
+
 	public static String generateAccountNumber() {
 		Random random = new Random();
 		// Generate a random 6-digit number between 100000 and 999999
@@ -17,5 +33,4 @@ public class UserUtils {
 		String prefix = String.valueOf(Year.now());
 		return prefix + String.valueOf(randomNumber);
 	}
-
 }
