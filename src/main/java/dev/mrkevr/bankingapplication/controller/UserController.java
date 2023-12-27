@@ -66,7 +66,7 @@ public class UserController {
 			.status(HttpStatus.OK.name())
 			.apiCode(UserUtils.USER_FIND_SUCCESS_CODE)
 			.timeStamp(LocalDateTime.now())
-			.message("")
+			.message(String.format("Users page %s and limit %s", page, limit))
 			.body(users)
 			.build();
 		
@@ -92,6 +92,9 @@ public class UserController {
 		return ResponseEntity.ok(genericResponse);
 	}
 	
+	/*
+	 * Change password
+	 */
 	@PatchMapping("/change-password")
 	ResponseEntity<GenericResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
 

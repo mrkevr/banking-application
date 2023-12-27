@@ -1,4 +1,4 @@
-package dev.mrkevr.bankingapplication.config;
+package dev.mrkevr.bankingapplication.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +28,7 @@ public class SecurityConfig {
 			auth.anyRequest().authenticated();
 		});
 		
-		
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        
         
         return httpSecurity.build();
     }
