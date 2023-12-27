@@ -21,21 +21,20 @@ public class SecurityConfig {
 
 	@Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-        	.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-//            		.requestMatchers(HttpMethod.POST, "api/v1/auth/signup").permitAll()
-//                    .requestMatchers(HttpMethod.POST, "api/v1/otp/sendOtp").permitAll()
-//                    .requestMatchers(HttpMethod.POST, "api/v1/otp/validateOtp").permitAll()
-//            		.requestMatchers("api/v1/users").permitAll()
-                    .anyRequest().permitAll());
-        
+		httpSecurity.csrf(c -> c.disable());
+		httpSecurity.httpBasic();
+		
+		httpSecurity.authorizeHttpRequests(auth -> {
+			auth.anyRequest().authenticated();
+		});
+		
+		
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         
         
         return httpSecurity.build();
     }
-
+	
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

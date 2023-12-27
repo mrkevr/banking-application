@@ -14,6 +14,8 @@ public final class UserUtils {
 	public static final String EMAIL_ALREADY_EXISTS_CODE = "102";
 	public static final String USER_FIND_SUCCESS_CODE = "103";
 	public static final String USER_FIND_FAILED_CODE = "104";
+	public static final String PASSWORD_CHANGE_SUCCESS_CODE = "105";
+	public static final String PASSWORD_CHANGE_FAILED_CODE = "106";
 
 	/*
 	 * Messages for response
