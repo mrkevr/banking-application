@@ -12,7 +12,9 @@ import dev.mrkevr.bankingapplication.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByAccountNumber(String accountNumber);
-
+	
+	Optional<User> findByEmail(String email);
+	
 	boolean existsByAccountNumber(String accountNumber);
 
 	boolean existsByEmail(String email);

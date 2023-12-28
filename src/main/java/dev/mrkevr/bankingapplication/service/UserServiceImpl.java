@@ -2,8 +2,10 @@ package dev.mrkevr.bankingapplication.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
+	private final PasswordEncoder passwordEncoder;
 	
 	@Transactional
 	@Override
@@ -94,14 +97,21 @@ public class UserServiceImpl implements UserService {
 		/*
 		 * Change password by email, returns 1 if the update is successful or 0 if not
 		 */
-		int rowsUpdated = userRepository.changePasswordByEmail(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
+		int rowsUpdated = userRepository.changePasswordByEmail(
+				changePasswordRequest.getEmail(), 
+				passwordEncoder.encode(changePasswordRequest.getNewPassword()));
 		
 		return rowsUpdated > 0;
 	}
 	
 	@Override
 	public boolean isValidUser(String email, String password) {
-		return userRepository.findByEmailAndPassword(email, password).isPresent();
+		Optional<User> optionalUser = userRepository.findByEmail(email);
+		if(optionalUser.isEmpty()) {
+			return false;
+		}
+		String currentPassword = optionalUser.get().getPassword();
+		return passwordEncoder.matches(password, currentPassword);
 	}
 
 }

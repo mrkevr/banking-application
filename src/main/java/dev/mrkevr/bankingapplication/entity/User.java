@@ -67,7 +67,10 @@ public class User {
 	
 	@Column(name = "password")
 	String password;
-
+	
+	/*
+	 * Emails also acts as accounts's username
+	 */
 	@Column(name = "email")
 	String email;
 	

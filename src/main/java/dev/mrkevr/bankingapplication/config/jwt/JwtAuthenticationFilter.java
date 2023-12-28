@@ -1,10 +1,14 @@
 package dev.mrkevr.bankingapplication.config.jwt;
 
 import java.io.IOException;
-import java.util.Optional;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.JwtException;
@@ -21,7 +25,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	
-	JwtTokenService jwtTokenService;
+	JwtService jwtService;
 	UserDetailsService userDetailsService;
 	
 	@Override
@@ -33,25 +37,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		/*
 		 * Extract token from the request
 		 */
-		Optional<String> optionalToken = jwtTokenService.getTokenFromRequest(request);
-		if(!optionalToken.isPresent()) {
+		String token = jwtService.getTokenFromRequest(request);
+		if(!StringUtils.hasText(token)) {
 			throw new JwtException("Token not found");
 		}
 		
 		/*
 		 * Validate the token
 		 */
-		String token = optionalToken.get();
-		if(!jwtTokenService.validateToken(token)) {
+		if(!jwtService.validateToken(token)) {
 			throw new JwtException("Token not valid");
 		}
 		
 		/*
 		 * Fetch the user(email) from the token and check it from the database
 		 */
-		String username = jwtTokenService.getSubject(token);
-		userDetailsService.loadUserByUsername(username);
+		String username = jwtService.getSubject(token);
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		
+		filterChain.doFilter(request, response);
 	}
 }

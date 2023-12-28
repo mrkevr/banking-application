@@ -2,13 +2,13 @@ package dev.mrkevr.bankingapplication.config.jwt;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import dev.mrkevr.bankingapplication.dto.TokenRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +19,7 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-public class JwtTokenService {
+public class JwtService {
 
 	@Value("${application-security.jwt.secret}")
 	private String jwtSecret;
@@ -27,7 +27,7 @@ public class JwtTokenService {
 	@Value("${application-security.jwt.expiration}")
 	private long jwtExpiration;
 
-	public String genearteToken(Authentication authentication) {
+	public String generateToken(Authentication authentication) {
 
 		String subject = authentication.getName();
 		Date currentDateTime = new Date();
@@ -39,12 +39,14 @@ public class JwtTokenService {
 		return token;
 	}
 	
-	public Optional<String> getTokenFromRequest(HttpServletRequest httpServletRequest) {
+	
+	
+	public String getTokenFromRequest(HttpServletRequest httpServletRequest) {
 		String bearerToken = httpServletRequest.getHeader("Authorization");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return Optional.of(bearerToken.substring(7));
+			return bearerToken.substring(7);
 		}
-		return Optional.empty();
+		return null;
 	}
 
 	/*
