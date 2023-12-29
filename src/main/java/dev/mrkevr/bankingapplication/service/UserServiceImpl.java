@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 			.phone(userCreationRequest.getPhone())
 			.email(userCreationRequest.getEmail())
 			.accountNumber(UserUtils.generateAccountNumber())
-			.password(UserUtils.generatePassword())
+			.password(passwordEncoder.encode(userCreationRequest.getPassword()))
 			.accountBalance(BigDecimal.ZERO)
 			.isActive(true)
 			.role(Role.ROLE_USER)
