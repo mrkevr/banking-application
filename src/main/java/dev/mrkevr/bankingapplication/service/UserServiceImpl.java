@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import dev.mrkevr.bankingapplication.dto.ChangePasswordRequest;
 import dev.mrkevr.bankingapplication.dto.UserCreationRequest;
 import dev.mrkevr.bankingapplication.dto.UserInfoResponse;
+import dev.mrkevr.bankingapplication.entity.Role;
 import dev.mrkevr.bankingapplication.entity.User;
 import dev.mrkevr.bankingapplication.exception.UserNotFoundException;
 import dev.mrkevr.bankingapplication.mapper.UserMapper;
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
 			.password(UserUtils.generatePassword())
 			.accountBalance(BigDecimal.ZERO)
 			.isActive(true)
+			.role(Role.ROLE_USER)
 			.build();
 		
 		/*
@@ -112,6 +114,13 @@ public class UserServiceImpl implements UserService {
 		}
 		String currentPassword = optionalUser.get().getPassword();
 		return passwordEncoder.matches(password, currentPassword);
+	}
+	
+	@Transactional
+	@Override
+	public void deleteById(Long id) {
+		User userToDelete = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+		userRepository.delete(userToDelete);
 	}
 
 }

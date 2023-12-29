@@ -17,4 +17,6 @@ public interface UserService {
 	boolean isValidUser(String email, String password);
 
 	boolean changePassword(ChangePasswordRequest changePasswordRequest);
+	
+	void deleteById(Long id);
 }

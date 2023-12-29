@@ -3,7 +3,6 @@ package dev.mrkevr.bankingapplication.config.security;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.context.support.BeanDefinitionDsl.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,7 +50,6 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 			
 			@Override
 			public String getUsername() {
-				
 				return user.getEmail();
 			}
 			
@@ -62,7 +60,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 			
 			@Override
 			public Collection<? extends GrantedAuthority> getAuthorities() {
-				return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+				return List.of(new SimpleGrantedAuthority(user.getRole().toString()));
 			}
 		};
 		

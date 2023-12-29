@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +38,7 @@ public class UserController {
 	/*
 	 * Save one user
 	 */
+	@PreAuthorize(UserUtils.HAS_ANY_ROLE_ADMIN_AND_USER)
 	@PostMapping
 	ResponseEntity<GenericResponse> saveUser(@RequestBody UserCreationRequest userCreationRequest) {
 		
@@ -55,6 +58,7 @@ public class UserController {
 	/*
 	 * Get users
 	 */
+	@PreAuthorize(UserUtils.HAS_ANY_ROLE_ADMIN_AND_USER)
 	@GetMapping
 	ResponseEntity<GenericResponse> getUsers(
 			@RequestParam(required = false, defaultValue = "0") int page,
@@ -76,6 +80,7 @@ public class UserController {
 	/*
 	 * Return one user by id
 	 */
+	@PreAuthorize(UserUtils.HAS_ANY_ROLE_ADMIN_AND_USER)
 	@GetMapping("/{id}")
 	ResponseEntity<GenericResponse> getUserById(@PathVariable Long id) {
 
@@ -95,6 +100,7 @@ public class UserController {
 	/*
 	 * Change password
 	 */
+	@PreAuthorize(UserUtils.HAS_ANY_ROLE_ADMIN_AND_USER)
 	@PatchMapping("/change-password")
 	ResponseEntity<GenericResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
 
@@ -121,7 +127,24 @@ public class UserController {
 		return changePasswordSuccessful ? ResponseEntity.ok(genericResponse) : ResponseEntity.unprocessableEntity().body(genericResponse);
 	}
 	
-	
+	/*
+	 * Delete user
+	 */
+	@PreAuthorize(UserUtils.HAS_ROLE_ADMIN)
+	@DeleteMapping("/{id}")
+	ResponseEntity<GenericResponse> deleteById(@PathVariable Long id){
+		userService.deleteById(id);
+		
+		GenericResponse genericResponse = GenericResponse.builder()
+				.status(HttpStatus.OK.name())
+				.apiCode(UserUtils.USER_DELETION_SUCCESS_CODE)
+				.timeStamp(LocalDateTime.now())
+				.message(UserUtils.USER_DELETION_SUCCESS_MESSAGE)
+				.body("")
+				.build();
+		
+		return ResponseEntity.ok(genericResponse);
+	}
 	
 	
 	

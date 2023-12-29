@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import dev.mrkevr.bankingapplication.exception.EmailAlreadyExistsException;
 import dev.mrkevr.bankingapplication.exception.UserNotFoundException;
+import io.jsonwebtoken.JwtException;
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -33,14 +35,26 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(EmailAlreadyExistsException.class)
-	public ResponseEntity<Object> handleUserNotFound(EmailAlreadyExistsException ex) {
+	public ResponseEntity<Object> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
 		ProblemDetail problemDetail = createProblemDetail(ex, HttpStatus.BAD_REQUEST);
 		return ResponseEntity.of(problemDetail).build();
 	}
 	
 	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<Object> handleUserNotFound(UserNotFoundException ex) {
+	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
 		ProblemDetail problemDetail = createProblemDetail(ex, HttpStatus.NOT_FOUND);
+		return ResponseEntity.of(problemDetail).build();
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+		ProblemDetail problemDetail = createProblemDetail(ex, HttpStatus.FORBIDDEN);
+		return ResponseEntity.of(problemDetail).build();
+	}
+	
+	@ExceptionHandler(JwtException.class)
+	public ResponseEntity<Object> handleJwtException(JwtException ex) {
+		ProblemDetail problemDetail = createProblemDetail(ex, HttpStatus.BAD_REQUEST);
 		return ResponseEntity.of(problemDetail).build();
 	}
 	
